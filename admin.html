@@ -14,12 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary-color: #1a5fb4;
             --secondary-color: #e95420;
@@ -32,309 +27,103 @@
             --shadow: 0 2px 10px rgba(0,0,0,0.1);
             --border-radius: 12px;
         }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-        }
-
+        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; }
         .admin-header {
-            background: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: white; padding: 15px 20px; display: flex; justify-content: space-between;
+            align-items: center; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100;
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
-        .logo h1 {
-            font-size: 1.2rem;
-            color: var(--primary-color);
-        }
-
-        .logout-btn {
-            background: var(--danger-color);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Stats */
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo img { width: 40px; height: 40px; border-radius: 50%; }
+        .logo h1 { font-size: 1.2rem; color: var(--primary-color); }
+        .logout-btn { background: var(--danger-color); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px; margin-bottom: 30px;
         }
-
         .stat-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            text-align: center;
-            box-shadow: var(--shadow);
+            background: white; border-radius: var(--border-radius); padding: 20px;
+            text-align: center; box-shadow: var(--shadow);
         }
-
-        .stat-card i {
-            font-size: 2rem;
-            color: var(--primary-color);
-        }
-
-        .stat-card h3 {
-            font-size: 1.8rem;
-            margin: 10px 0;
-        }
-
-        /* Sections */
+        .stat-card i { font-size: 2rem; color: var(--primary-color); }
+        .stat-card h3 { font-size: 1.8rem; margin: 10px 0; }
         .admin-section {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
+            background: white; border-radius: var(--border-radius); padding: 20px;
+            margin-bottom: 30px; box-shadow: var(--shadow);
         }
-
         .section-title {
-            font-size: 1.2rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 1.2rem; color: var(--primary-color); margin-bottom: 20px;
+            padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;
+            display: flex; align-items: center; gap: 10px;
         }
-
-        /* Form */
-        .form-group {
-            margin-bottom: 15px;
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px 12px; border: 1px solid #ddd;
+            border-radius: 8px; font-family: 'Poppins', sans-serif;
         }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
+            padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;
         }
-
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .btn-success {
-            background: var(--success-color);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger-color);
-            color: white;
-        }
-
-        .btn-warning {
-            background: var(--warning-color);
-            color: var(--dark-color);
-        }
-
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 0.8rem;
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background: #f8f9fa;
-            font-weight: 600;
-        }
-
-        .user-avatar-small {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .online-badge {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-
-        .online-badge.online {
-            background: var(--success-color);
-        }
-
-        .online-badge.offline {
-            background: var(--gray-color);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        /* Modal */
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-success { background: var(--success-color); color: white; }
+        .btn-danger { background: var(--danger-color); color: white; }
+        .btn-warning { background: var(--warning-color); color: var(--dark-color); }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; }
+        .user-avatar-small { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
+        .online-badge { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+        .online-badge.online { background: var(--success-color); }
+        .online-badge.offline { background: var(--gray-color); }
+        .action-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; justify-content: center;
+            align-items: center; z-index: 1000;
         }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-
+        .modal-overlay.show { display: flex; }
         .modal {
-            background: white;
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 450px;
-            padding: 20px;
+            background: white; border-radius: var(--border-radius); width: 90%;
+            max-width: 450px; padding: 20px;
         }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
-        }
-
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; }
         .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--success-color);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            display: none;
-            z-index: 1100;
+            position: fixed; bottom: 20px; right: 20px; background: var(--success-color);
+            color: white; padding: 10px 20px; border-radius: 8px; display: none; z-index: 1100;
         }
-
-        .toast.show {
-            display: block;
-            animation: slideIn 0.3s ease;
+        .toast.show { display: block; }
+        .search-box { margin-bottom: 15px; }
+        .search-box input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .link-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
         }
-
-        @keyframes slideIn {
-            from { transform: translateX(100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .search-box {
-            margin-bottom: 15px;
-        }
-
-        .search-box input {
-            width: 100%;
+        .link-input-group input {
+            flex: 1;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
         }
-
         @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            th, td {
-                font-size: 0.8rem;
-                padding: 8px;
-            }
+            .form-row { grid-template-columns: 1fr; }
+            th, td { font-size: 0.8rem; padding: 8px; }
         }
     </style>
 </head>
 <body>
     <div class="admin-header">
-        <div class="logo">
-            <img src="https://files.catbox.moe/xcsjiz.png" alt="Logo">
-            <h1>Admin Panel X TKRO 5</h1>
-        </div>
-        <div>
-            <span id="adminName" style="margin-right: 15px;"></span>
-            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </div>
+        <div class="logo"><img src="https://files.catbox.moe/xcsjiz.png" alt="Logo"><h1>Admin Panel X TKRO 5</h1></div>
+        <div><span id="adminName" style="margin-right: 15px;"></span><button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
     </div>
 
     <div class="container">
-        <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card"><i class="fas fa-users"></i><h3 id="totalUsers">0</h3><p>Total User</p></div>
             <div class="stat-card"><i class="fas fa-user-check"></i><h3 id="onlineUsers">0</h3><p>Online</p></div>
@@ -342,57 +131,54 @@
             <div class="stat-card"><i class="fas fa-bullhorn"></i><h3 id="totalAnn">0</h3><p>Pengumuman</p></div>
         </div>
 
-        <!-- Tambah User -->
         <div class="admin-section">
             <div class="section-title"><i class="fas fa-user-plus"></i> Tambah User Baru</div>
             <div class="form-row">
                 <input type="text" id="newFullName" placeholder="Nama Lengkap">
-                <input type="text" id="newUsername" placeholder="Username (panggilan)">
+                <input type="text" id="newUsername" placeholder="Username">
                 <input type="email" id="newEmail" placeholder="Email">
                 <input type="password" id="newPassword" placeholder="Password">
-                <select id="newRole">
-                    <option value="user">Siswa</option>
-                    <option value="admin">Admin</option>
-                </select>
+                <select id="newRole"><option value="user">Siswa</option><option value="admin">Admin</option></select>
                 <button class="btn btn-success" id="addUserBtn"><i class="fas fa-plus"></i> Tambah User</button>
             </div>
         </div>
 
-        <!-- Daftar User -->
+        <!-- Kelola Link Grup Chat Kelas -->
+        <div class="admin-section">
+            <div class="section-title"><i class="fas fa-link"></i> Kelola Link Grup Chat Kelas</div>
+            <div class="form-group">
+                <label>Link WhatsApp / Telegram / Grup Lainnya</label>
+                <div class="link-input-group">
+                    <input type="text" id="groupLinkInput" placeholder="https://chat.whatsapp.com/...">
+                    <button class="btn btn-primary" id="saveGroupLinkBtn"><i class="fas fa-save"></i> Simpan</button>
+                </div>
+                <small style="color: var(--gray-color);">Link ini akan muncul di menu info grup chat kelas</small>
+            </div>
+            <div id="currentGroupLink" style="margin-top: 10px; font-size: 0.85rem;"></div>
+        </div>
+
         <div class="admin-section">
             <div class="section-title"><i class="fas fa-list"></i> Daftar User</div>
-            <div class="search-box">
-                <input type="text" id="searchUser" placeholder="Cari nama atau username...">
-            </div>
+            <div class="search-box"><input type="text" id="searchUser" placeholder="Cari nama atau username..."></div>
             <div class="table-container">
-                <table id="userTable">
+                <table>
                     <thead>
                         <tr><th>Foto</th><th>Nama</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>
                     </thead>
-                    <tbody id="userTableBody">
-                        <tr><td colspan="6" style="text-align: center;">Memuat...</td></tr>
+                    <tbody id="userTableBody"><tr><td colspan="6" style="text-align: center;">Memuat...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Kelola Pengumuman -->
         <div class="admin-section">
             <div class="section-title"><i class="fas fa-bullhorn"></i> Kelola Pengumuman</div>
-            <div class="form-group">
-                <input type="text" id="annTitle" placeholder="Judul Pengumuman" style="width: 100%;">
-            </div>
-            <div class="form-group">
-                <textarea id="annContent" rows="3" placeholder="Isi pengumuman..."></textarea>
-            </div>
+            <div class="form-group"><input type="text" id="annTitle" placeholder="Judul Pengumuman"></div>
+            <div class="form-group"><textarea id="annContent" rows="3" placeholder="Isi pengumuman..."></textarea></div>
             <button class="btn btn-primary" id="addAnnBtn"><i class="fas fa-plus"></i> Tambah Pengumuman</button>
-            <div style="margin-top: 20px;">
-                <h4>Pengumuman Terbaru</h4>
-                <div id="announcementList"></div>
-            </div>
+            <div style="margin-top: 20px;"><h4>Pengumuman Terbaru</h4><div id="announcementList"></div></div>
         </div>
 
-        <!-- Reset Data -->
         <div class="admin-section">
             <div class="section-title"><i class="fas fa-database"></i> Reset Data</div>
             <div class="action-buttons">
@@ -403,41 +189,14 @@
         </div>
     </div>
 
-    <!-- Modal Edit User -->
-    <div class="modal-overlay" id="editUserModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Edit User</h3>
-                <button class="modal-close" onclick="closeModal('editUserModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Nama Lengkap</label>
-                    <input type="text" id="editFullName">
-                </div>
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="editUsername">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="editEmail">
-                </div>
-                <div class="form-group">
-                    <label>Role</label>
-                    <select id="editRole">
-                        <option value="user">Siswa</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Password Baru (kosongkan jika tidak diubah)</label>
-                    <input type="password" id="editPassword" placeholder="Minimal 6 karakter">
-                </div>
-                <button class="btn btn-primary" id="saveEditBtn">Simpan Perubahan</button>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="editUserModal"><div class="modal"><div class="modal-header"><h3>Edit User</h3><button class="modal-close" onclick="closeModal('editUserModal')">&times;</button></div>
+        <div class="modal-body"><div class="form-group"><label>Nama Lengkap</label><input type="text" id="editFullName"></div>
+        <div class="form-group"><label>Username</label><input type="text" id="editUsername"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="editEmail"></div>
+        <div class="form-group"><label>Role</label><select id="editRole"><option value="user">Siswa</option><option value="admin">Admin</option></select></div>
+        <div class="form-group"><label>Bio / Status</label><textarea id="editBio" rows="2" placeholder="Bio pengguna..."></textarea></div>
+        <div class="form-group"><label>Password Baru (kosongkan jika tidak diubah)</label><input type="password" id="editPassword" placeholder="Minimal 6 karakter"></div>
+        <button class="btn btn-primary" id="saveEditBtn">Simpan Perubahan</button></div></div></div>
 
     <div class="toast" id="toast"></div>
 
@@ -459,7 +218,6 @@
 
         let currentUser = null;
         let currentEditUserId = null;
-        let usersListener = null;
 
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
@@ -469,21 +227,16 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('show');
-        }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
 
         async function loadStats() {
             const usersSnap = await db.collection('users').get();
             const totalUsers = usersSnap.size;
             const onlineUsers = usersSnap.docs.filter(d => d.data().isOnline === true).length;
-            
             const chatSnap = await rtdb.ref('chatRooms').once('value');
             const totalChats = chatSnap.exists() ? Object.keys(chatSnap.val()).length : 0;
-            
             const annSnap = await rtdb.ref('announcements').once('value');
             const totalAnn = annSnap.exists() ? Object.keys(annSnap.val()).length : 0;
-            
             document.getElementById('totalUsers').textContent = totalUsers;
             document.getElementById('onlineUsers').textContent = onlineUsers;
             document.getElementById('totalChats').textContent = totalChats;
@@ -494,24 +247,12 @@
             const tbody = document.getElementById('userTableBody');
             const snapshot = await db.collection('users').get();
             let users = [];
-            snapshot.forEach(doc => {
-                users.push({ id: doc.id, ...doc.data() });
-            });
-            
+            snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
             if (searchTerm) {
                 const term = searchTerm.toLowerCase();
-                users = users.filter(u => 
-                    (u.fullName || '').toLowerCase().includes(term) ||
-                    (u.username || '').toLowerCase().includes(term) ||
-                    (u.email || '').toLowerCase().includes(term)
-                );
+                users = users.filter(u => (u.fullName || '').toLowerCase().includes(term) || (u.username || '').toLowerCase().includes(term) || (u.email || '').toLowerCase().includes(term));
             }
-            
-            if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Tidak ada user</td></tr>';
-                return;
-            }
-            
+            if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Tidak ada user</td></tr>'; return; }
             tbody.innerHTML = users.map(user => `
                 <tr>
                     <td><img class="user-avatar-small" src="${user.profilePic || 'https://ui-avatars.com/api/?background=1a5fb4&color=fff&name=' + encodeURIComponent(user.displayName || user.fullName || 'User')}"></td>
@@ -529,12 +270,7 @@
             `).join('');
         }
 
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 
         window.openEditModal = async function(userId) {
             const userDoc = await db.collection('users').doc(userId).get();
@@ -545,6 +281,7 @@
                 document.getElementById('editUsername').value = data.username || '';
                 document.getElementById('editEmail').value = data.email || '';
                 document.getElementById('editRole').value = data.isAdmin ? 'admin' : 'user';
+                document.getElementById('editBio').value = data.bio || '';
                 document.getElementById('editPassword').value = '';
                 document.getElementById('editUserModal').classList.add('show');
             }
@@ -555,46 +292,27 @@
             const username = document.getElementById('editUsername').value.trim();
             const email = document.getElementById('editEmail').value.trim();
             const role = document.getElementById('editRole').value;
-            const newPassword = document.getElementById('editPassword').value;
-            
-            if (!fullName || !username || !email) {
-                showToast('Isi semua field!', true);
-                return;
-            }
-            
+            const bio = document.getElementById('editBio').value.trim();
+            if (!fullName || !username || !email) { showToast('Isi semua field!', true); return; }
             try {
-                const updates = {
-                    fullName: fullName,
-                    displayName: username,
-                    username: username,
-                    email: email,
-                    isAdmin: role === 'admin'
-                };
-                
-                await db.collection('users').doc(currentEditUserId).update(updates);
-                
-                if (newPassword && newPassword.length >= 6) {
-                    // Untuk ganti password perlu login ulang sebagai admin? 
-                    // Lebih mudah via reset password email
-                    showToast('Ganti password: Gunakan fitur "Reset Password"', true);
-                }
-                
+                await db.collection('users').doc(currentEditUserId).update({ 
+                    fullName: fullName, 
+                    displayName: username, 
+                    username: username, 
+                    email: email, 
+                    isAdmin: role === 'admin',
+                    bio: bio || ''
+                });
                 showToast('User berhasil diupdate!');
                 closeModal('editUserModal');
                 loadUsers(document.getElementById('searchUser').value);
-            } catch (error) {
-                showToast('Gagal update: ' + error.message, true);
-            }
+            } catch (error) { showToast('Gagal: ' + error.message, true); }
         });
 
         window.resetPassword = async function(userId, email) {
-            if (confirm(`Reset password untuk ${email}? Password baru akan dikirim ke email.`)) {
-                try {
-                    await auth.sendPasswordResetEmail(email);
-                    showToast(`Email reset password dikirim ke ${email}`);
-                } catch (error) {
-                    showToast('Gagal: ' + error.message, true);
-                }
+            if (confirm(`Reset password untuk ${email}?`)) {
+                try { await auth.sendPasswordResetEmail(email); showToast(`Email reset dikirim ke ${email}`); } 
+                catch (error) { showToast('Gagal: ' + error.message, true); }
             }
         };
 
@@ -602,29 +320,23 @@
             if (confirm('Force logout user ini?')) {
                 try {
                     await rtdb.ref(`sessions/${userId}`).remove();
-                    await db.collection('users').doc(userId).update({ isOnline: false, lastActive: Date.now() });
+                    await db.collection('users').doc(userId).update({ isOnline: false });
                     showToast('User berhasil di-force logout');
                     loadUsers(document.getElementById('searchUser').value);
                     loadStats();
-                } catch (error) {
-                    showToast('Gagal: ' + error.message, true);
-                }
+                } catch (error) { showToast('Gagal: ' + error.message, true); }
             }
         };
 
         window.deleteUser = async function(userId) {
-            if (confirm('HAPUS USER INI? TINDAKAN INI TIDAK DAPAT DIBATALKAN!')) {
+            if (confirm('HAPUS USER INI? TIDAK DAPAT DIBATALKAN!')) {
                 try {
-                    // Hapus dari Auth (perlu admin SDK, tidak bisa dari client)
-                    // Alternatif: hanya nonaktifkan
                     await db.collection('users').doc(userId).update({ isActive: false, isDeleted: true });
                     await rtdb.ref(`sessions/${userId}`).remove();
                     showToast('User dinonaktifkan');
                     loadUsers(document.getElementById('searchUser').value);
                     loadStats();
-                } catch (error) {
-                    showToast('Gagal: ' + error.message, true);
-                }
+                } catch (error) { showToast('Gagal: ' + error.message, true); }
             }
         };
 
@@ -634,36 +346,17 @@
             const email = document.getElementById('newEmail').value.trim();
             const password = document.getElementById('newPassword').value;
             const role = document.getElementById('newRole').value;
-            
-            if (!fullName || !username || !email || !password) {
-                showToast('Isi semua field!', true);
-                return;
-            }
-            
-            if (password.length < 6) {
-                showToast('Password minimal 6 karakter!', true);
-                return;
-            }
-            
+            if (!fullName || !username || !email || !password) { showToast('Isi semua field!', true); return; }
+            if (password.length < 6) { showToast('Password minimal 6 karakter!', true); return; }
             try {
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
-                
                 await db.collection('users').doc(user.uid).set({
-                    uid: user.uid,
-                    fullName: fullName,
-                    displayName: username,
-                    username: username,
-                    email: email,
-                    profilePic: `https://ui-avatars.com/api/?background=1a5fb4&color=fff&name=${encodeURIComponent(fullName[0])}`,
-                    bio: `Siswa X TKRO 5 - SMKN 6 Bandung`,
-                    isAdmin: role === 'admin',
-                    isOnline: false,
-                    createdAt: Date.now(),
-                    kelas: 'X TKRO 5',
-                    sekolah: 'SMKN 6 Bandung'
+                    uid: user.uid, fullName: fullName, displayName: username, username: username,
+                    email: email, profilePic: `https://ui-avatars.com/api/?background=1a5fb4&color=fff&name=${encodeURIComponent(fullName[0])}`,
+                    bio: `Siswa X TKRO 5`, isAdmin: role === 'admin', isOnline: false,
+                    createdAt: Date.now(), kelas: 'X TKRO 5', sekolah: 'SMKN 6 Bandung'
                 });
-                
                 showToast('User berhasil ditambahkan!');
                 document.getElementById('newFullName').value = '';
                 document.getElementById('newUsername').value = '';
@@ -671,23 +364,35 @@
                 document.getElementById('newPassword').value = '';
                 loadUsers();
                 loadStats();
-            } catch (error) {
-                showToast('Gagal: ' + error.message, true);
-            }
+            } catch (error) { showToast('Gagal: ' + error.message, true); }
         });
 
-        // Announcement
+        // Group Link Settings
+        async function loadGroupLink() {
+            const snapshot = await rtdb.ref('chatRooms/classroom_x_tkro_5/settings/link').once('value');
+            const link = snapshot.val();
+            const displayDiv = document.getElementById('currentGroupLink');
+            if (link) {
+                displayDiv.innerHTML = `<strong>Link saat ini:</strong> <a href="${link}" target="_blank">${link}</a>`;
+                document.getElementById('groupLinkInput').value = link;
+            } else {
+                displayDiv.innerHTML = '<strong>Link saat ini:</strong> Belum diatur';
+            }
+        }
+
+        document.getElementById('saveGroupLinkBtn').addEventListener('click', async () => {
+            const link = document.getElementById('groupLinkInput').value.trim();
+            await rtdb.ref('chatRooms/classroom_x_tkro_5/settings').update({ link: link });
+            showToast('Link grup disimpan!');
+            loadGroupLink();
+        });
+
         async function loadAnnouncements() {
             const snapshot = await rtdb.ref('announcements').orderByChild('timestamp').limitToLast(5).once('value');
             const listDiv = document.getElementById('announcementList');
-            if (!snapshot.exists()) {
-                listDiv.innerHTML = '<p>Tidak ada pengumuman</p>';
-                return;
-            }
+            if (!snapshot.exists()) { listDiv.innerHTML = '<p>Tidak ada pengumuman</p>'; return; }
             const announcements = [];
-            snapshot.forEach(child => {
-                announcements.push({ id: child.key, ...child.val() });
-            });
+            snapshot.forEach(child => announcements.push({ id: child.key, ...child.val() }));
             listDiv.innerHTML = announcements.reverse().map(ann => `
                 <div style="padding: 10px; border-bottom: 1px solid #eee;">
                     <strong>${escapeHtml(ann.title)}</strong><br>
@@ -699,27 +404,14 @@
         }
 
         window.deleteAnnouncement = async function(id) {
-            if (confirm('Hapus pengumuman?')) {
-                await rtdb.ref(`announcements/${id}`).remove();
-                loadAnnouncements();
-                loadStats();
-                showToast('Pengumuman dihapus');
-            }
+            if (confirm('Hapus pengumuman?')) { await rtdb.ref(`announcements/${id}`).remove(); loadAnnouncements(); loadStats(); showToast('Pengumuman dihapus'); }
         };
 
         document.getElementById('addAnnBtn').addEventListener('click', async () => {
             const title = document.getElementById('annTitle').value.trim();
             const content = document.getElementById('annContent').value.trim();
-            if (!title || !content) {
-                showToast('Isi judul dan isi!', true);
-                return;
-            }
-            await rtdb.ref('announcements').push().set({
-                title: title,
-                content: content,
-                author: 'Admin',
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            });
+            if (!title || !content) { showToast('Isi judul dan isi!', true); return; }
+            await rtdb.ref('announcements').push().set({ title: title, content: content, author: 'Admin', timestamp: firebase.database.ServerValue.TIMESTAMP });
             showToast('Pengumuman ditambahkan');
             document.getElementById('annTitle').value = '';
             document.getElementById('annContent').value = '';
@@ -727,61 +419,22 @@
             loadStats();
         });
 
-        // Reset
-        document.getElementById('resetChatBtn').addEventListener('click', async () => {
-            if (confirm('Reset SEMUA chat publik?')) {
-                await rtdb.ref('chatRooms/classroom_x_tkro_5/messages').remove();
-                showToast('Chat publik direset');
-            }
-        });
-        
-        document.getElementById('resetPrivateChatBtn').addEventListener('click', async () => {
-            if (confirm('Reset SEMUA chat private?')) {
-                await rtdb.ref('privateMessages').remove();
-                showToast('Chat private direset');
-            }
-        });
-        
-        document.getElementById('resetAllBtn').addEventListener('click', async () => {
-            if (confirm('RESET SEMUA DATA? Ini tidak bisa dibatalkan!')) {
-                await rtdb.ref('chatRooms').remove();
-                await rtdb.ref('privateMessages').remove();
-                await rtdb.ref('announcements').remove();
-                showToast('Semua data chat & pengumuman direset');
-                loadStats();
-                loadAnnouncements();
-            }
-        });
+        document.getElementById('resetChatBtn').addEventListener('click', async () => { if (confirm('Reset SEMUA chat publik?')) { await rtdb.ref('chatRooms/classroom_x_tkro_5/messages').remove(); showToast('Chat publik direset'); } });
+        document.getElementById('resetPrivateChatBtn').addEventListener('click', async () => { if (confirm('Reset SEMUA chat private?')) { await rtdb.ref('privateMessages').remove(); showToast('Chat private direset'); } });
+        document.getElementById('resetAllBtn').addEventListener('click', async () => { if (confirm('RESET SEMUA DATA?')) { await rtdb.ref('chatRooms').remove(); await rtdb.ref('privateMessages').remove(); await rtdb.ref('announcements').remove(); showToast('Semua data direset'); loadStats(); loadAnnouncements(); } });
 
-        // Search
-        document.getElementById('searchUser').addEventListener('input', (e) => {
-            loadUsers(e.target.value);
-        });
+        document.getElementById('searchUser').addEventListener('input', (e) => loadUsers(e.target.value));
+        document.getElementById('logoutBtn').addEventListener('click', async () => { if (confirm('Logout?')) { await auth.signOut(); window.location.href = 'login.html'; } });
 
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            if (confirm('Logout dari admin panel?')) {
-                await auth.signOut();
-                window.location.href = 'login.html';
-            }
-        });
-
-        // Auth check
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 if (userDoc.exists && userDoc.data().isAdmin === true) {
                     currentUser = { uid: user.uid, ...userDoc.data() };
                     document.getElementById('adminName').textContent = currentUser.displayName || currentUser.fullName;
-                    loadStats();
-                    loadUsers();
-                    loadAnnouncements();
-                } else {
-                    window.location.href = 'web-kelas.html';
-                }
-            } else {
-                window.location.href = 'login.html';
-            }
+                    loadStats(); loadUsers(); loadAnnouncements(); loadGroupLink();
+                } else { window.location.href = 'web-kelas.html'; }
+            } else { window.location.href = 'login.html'; }
         });
     </script>
 </body>

@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="https://files.catbox.moe/xcsjiz.png" type="image/png">
     
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -98,6 +97,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            position: relative;
         }
 
         .user-avatar {
@@ -115,19 +115,7 @@
             display: none;
         }
 
-        .menu-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            cursor: pointer;
-        }
-
-        /* Dropdown */
-        .user-dropdown {
-            position: relative;
-        }
-
+        /* Dropdown Menu */
         .dropdown-menu {
             position: absolute;
             top: 55px;
@@ -155,6 +143,13 @@
             color: var(--dark-color);
             transition: var(--transition);
             border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            background: white;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            font-size: 0.9rem;
         }
 
         .dropdown-item:hover {
@@ -208,6 +203,7 @@
             text-decoration: none;
             color: var(--dark-color);
             box-shadow: var(--shadow);
+            display: block;
         }
 
         .action-card:hover {
@@ -268,10 +264,6 @@
             padding-left: 12px;
         }
 
-        .announcement-content {
-            padding: 10px 0;
-        }
-
         .announcement-title {
             font-size: 1.1rem;
             font-weight: 600;
@@ -293,15 +285,27 @@
             margin-top: 40px;
         }
 
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: none;
+            z-index: 1000;
+        }
+        .toast.show { display: block; }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @media (min-width: 768px) {
-            .user-name {
-                display: inline;
-            }
+            .user-name { display: inline; }
         }
     </style>
 </head>
@@ -317,16 +321,13 @@
             </div>
             <div class="user-menu">
                 <span class="user-name" id="userName">Loading...</span>
-                <div class="user-dropdown">
-                    <img id="userAvatar" class="user-avatar" src="https://ui-avatars.com/api/?background=1a5fb4&color=fff&name=User" alt="Avatar">
-                    <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> Profil Saya</a>
-                        <a href="chat-room.html" class="dropdown-item"><i class="fas fa-comments"></i> Chat Kelas</a>
-                        <a href="chat-private.html" class="dropdown-item"><i class="fas fa-lock"></i> Chat Private</a>
-                        <div class="dropdown-item" id="logoutDropdown"><i class="fas fa-sign-out-alt"></i> Logout</div>
-                    </div>
+                <img id="userAvatar" class="user-avatar" src="https://ui-avatars.com/api/?background=1a5fb4&color=fff&name=User" alt="Avatar">
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <button class="dropdown-item" onclick="goToProfile()"><i class="fas fa-user"></i> Profil Saya</button>
+                    <button class="dropdown-item" onclick="goToChatRoom()"><i class="fas fa-comments"></i> Chat Kelas</button>
+                    <button class="dropdown-item" onclick="goToChatPrivate()"><i class="fas fa-lock"></i> Chat Private</button>
+                    <button class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
                 </div>
-                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
             </div>
         </div>
     </header>
@@ -339,43 +340,20 @@
             </div>
 
             <div class="quick-actions">
-                <a href="chat-room.html" class="action-card">
-                    <i class="fas fa-comments"></i>
-                    <span>Chat Kelas</span>
-                </a>
-                <a href="chat-private.html" class="action-card">
-                    <i class="fas fa-lock"></i>
-                    <span>Chat Private</span>
-                </a>
-                <a href="profile.html" class="action-card">
-                    <i class="fas fa-user-edit"></i>
-                    <span>Edit Profil</span>
-                </a>
+                <button class="action-card" onclick="goToChatRoom()"><i class="fas fa-comments"></i><span>Chat Kelas</span></button>
+                <button class="action-card" onclick="goToChatPrivate()"><i class="fas fa-lock"></i><span>Chat Private</span></button>
+                <button class="action-card" onclick="goToProfile()"><i class="fas fa-user-edit"></i><span>Edit Profil</span></button>
             </div>
 
             <div class="info-grid">
-                <div class="info-card">
-                    <i class="fas fa-users"></i>
-                    <h3 id="totalStudents">38</h3>
-                    <p>Siswa</p>
-                </div>
-                <div class="info-card">
-                    <i class="fas fa-chalkboard-user"></i>
-                    <h3 id="totalTeachers">15</h3>
-                    <p>Guru</p>
-                </div>
-                <div class="info-card">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3>8</h3>
-                    <p>Jurusan</p>
-                </div>
+                <div class="info-card"><i class="fas fa-users"></i><h3 id="totalStudents">38</h3><p>Siswa</p></div>
+                <div class="info-card"><i class="fas fa-chalkboard-user"></i><h3 id="totalTeachers">15</h3><p>Guru</p></div>
+                <div class="info-card"><i class="fas fa-calendar-alt"></i><h3>8</h3><p>Jurusan</p></div>
             </div>
 
             <div class="announcement-card">
                 <h3><i class="fas fa-bullhorn"></i> Pengumuman Terbaru</h3>
-                <div id="announcementContent">
-                    <p class="announcement-title">Memuat pengumuman...</p>
-                </div>
+                <div id="announcementContent"><p>Memuat...</p></div>
             </div>
         </div>
     </main>
@@ -386,6 +364,8 @@
             <p style="font-size: 0.8rem; opacity: 0.7;">Built with <i class="fas fa-heart"></i> by X TKRO 5</p>
         </div>
     </footer>
+
+    <div class="toast" id="toast"></div>
 
     <script>
         const firebaseConfig = {
@@ -403,88 +383,89 @@
         const db = firebase.firestore();
         const rtdb = firebase.database();
 
-        let currentUserData = null;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('deviceId');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId', deviceId);
+            }
+            return deviceId;
+        }
+
+        function goToProfile() { window.location.href = 'profile.html'; }
+        function goToChatRoom() { window.location.href = 'chat-room.html'; }
+        function goToChatPrivate() { window.location.href = 'chat-private.html'; }
 
         async function loadUserData(user) {
             const userDoc = await db.collection('users').doc(user.uid).get();
             if (userDoc.exists) {
-                currentUserData = userDoc.data();
-                const displayName = currentUserData.displayName || currentUserData.fullName;
-                document.getElementById('userName').textContent = displayName;
-                document.getElementById('welcomeMsg').textContent = `Halo, ${displayName}!`;
-                if (currentUserData.profilePic) {
-                    document.getElementById('userAvatar').src = currentUserData.profilePic;
-                }
+                const data = userDoc.data();
+                document.getElementById('userName').textContent = data.displayName || data.fullName;
+                document.getElementById('welcomeMsg').textContent = `Halo, ${data.displayName || data.fullName}!`;
+                if (data.profilePic) document.getElementById('userAvatar').src = data.profilePic;
             }
         }
 
         async function loadAnnouncement() {
-            const snapshot = await rtdb.ref('announcements').orderByChild('timestamp').limitToLast(1).once('value');
-            const data = snapshot.val();
+            const snap = await rtdb.ref('announcements').orderByChild('timestamp').limitToLast(1).once('value');
+            const data = snap.val();
             if (data) {
                 const latest = Object.values(data)[0];
                 document.getElementById('announcementContent').innerHTML = `
-                    <div class="announcement-title">${latest.title || 'Pengumuman'}</div>
+                    <div class="announcement-title">${latest.title}</div>
                     <div class="announcement-date">${new Date(latest.timestamp).toLocaleDateString('id-ID')}</div>
-                    <p>${latest.content || 'Tidak ada konten'}</p>
+                    <p>${latest.content}</p>
                 `;
             } else {
                 document.getElementById('announcementContent').innerHTML = '<p>Belum ada pengumuman</p>';
             }
         }
 
-        // Dropdown toggle
-        const userAvatar = document.getElementById('userAvatar');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        
-        userAvatar.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('show');
-        });
-        
-        document.addEventListener('click', () => {
-            dropdownMenu.classList.remove('show');
-        });
+        // Dropdown
+        const avatar = document.getElementById('userAvatar');
+        const dropdown = document.getElementById('dropdownMenu');
+        avatar.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('show'); });
+        document.addEventListener('click', () => dropdown.classList.remove('show'));
 
         // Logout
-        document.getElementById('logoutDropdown').addEventListener('click', async () => {
-            if (confirm('Yakin ingin logout?')) {
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            if (confirm('Yakin logout?')) {
                 const user = auth.currentUser;
                 if (user) {
                     await rtdb.ref(`sessions/${user.uid}`).remove();
-                    await db.collection('users').doc(user.uid).update({ isOnline: false, lastActive: Date.now() });
+                    await db.collection('users').doc(user.uid).update({ isOnline: false });
                 }
                 await auth.signOut();
+                localStorage.removeItem('deviceId');
                 window.location.href = 'login.html';
             }
         });
 
-        // Menu toggle for mobile
-        document.getElementById('menuToggle').addEventListener('click', () => {
-            dropdownMenu.classList.toggle('show');
-        });
-
-        // Load data
+        // Auth check
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                // Cek session
-                const deviceId = localStorage.getItem('deviceId');
-                const sessionRef = rtdb.ref(`sessions/${user.uid}`);
-                const session = await sessionRef.once('value');
+                const deviceId = getDeviceId();
+                const session = await rtdb.ref(`sessions/${user.uid}`).once('value');
                 if (!session.exists() || session.val().deviceId !== deviceId) {
                     await auth.signOut();
                     window.location.href = 'login.html';
                     return;
                 }
-                
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists && userDoc.data().isAdmin === true) {
+                    window.location.href = 'admin.html';
+                    return;
+                }
                 await loadUserData(user);
                 await loadAnnouncement();
-                
-                // Update online status
-                await db.collection('users').doc(user.uid).update({
-                    isOnline: true,
-                    lastActive: Date.now()
-                });
+                await db.collection('users').doc(user.uid).update({ isOnline: true, lastActive: Date.now() });
             } else {
                 window.location.href = 'login.html';
             }
