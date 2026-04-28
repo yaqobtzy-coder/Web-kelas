@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="https://files.catbox.moe/xcsjiz.png" type="image/png">
     
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -16,351 +15,110 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary-color: #1a5fb4;
             --secondary-color: #e95420;
             --accent-color: #f2a900;
-            --dark-color: #333333;
+            --dark-color: #333;
             --gray-color: #6c757d;
             --success-color: #28a745;
             --danger-color: #dc3545;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
             --border-radius: 12px;
-            --transition: all 0.3s ease;
         }
-
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Header */
+        .container { max-width: 800px; margin: 0 auto; }
         .header {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: white; border-radius: var(--border-radius); padding: 15px 20px;
+            margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
             box-shadow: var(--shadow);
         }
-
-        .header h1 {
-            font-size: 1.3rem;
-            color: var(--primary-color);
-        }
-
+        .header h1 { font-size: 1.3rem; color: var(--primary-color); }
         .back-btn {
-            background: var(--gray-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            background: var(--gray-color); color: white; border: none; padding: 8px 15px;
+            border-radius: 8px; cursor: pointer; text-decoration: none;
         }
-
-        .back-btn:hover {
-            background: #5a6268;
-        }
-
-        /* Profile Card */
         .profile-card {
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
+            background: white; border-radius: var(--border-radius); overflow: hidden;
+            box-shadow: var(--shadow); margin-bottom: 20px;
         }
-
-        .profile-cover {
-            height: 120px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        }
-
+        .profile-cover { height: 120px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); }
         .profile-avatar-wrapper {
-            text-align: center;
-            margin-top: -60px;
-            position: relative;
-            margin-bottom: 20px;
+            text-align: center; margin-top: -60px; position: relative; margin-bottom: 20px;
         }
-
         .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid white;
-            background: white;
-            object-fit: cover;
-            display: inline-block;
-            box-shadow: var(--shadow);
+            width: 120px; height: 120px; border-radius: 50%; border: 4px solid white;
+            background: white; object-fit: cover; box-shadow: var(--shadow);
         }
-
         .change-photo-btn {
-            position: absolute;
-            bottom: 5px;
-            right: calc(50% - 60px);
-            background: var(--primary-color);
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: 2px solid white;
-            transition: var(--transition);
+            position: absolute; bottom: 5px; right: calc(50% - 60px);
+            background: var(--primary-color); color: white; width: 36px; height: 36px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border: 2px solid white;
         }
-
-        .change-photo-btn:hover {
-            background: #0d3d8c;
-            transform: scale(1.05);
-        }
-
-        .profile-name {
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        .profile-name h2 {
-            font-size: 1.5rem;
-            color: var(--dark-color);
-        }
-
-        .profile-role {
-            text-align: center;
-            color: var(--gray-color);
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-        }
-
-        /* Form Sections */
+        .profile-name { text-align: center; margin-bottom: 5px; }
+        .profile-name h2 { font-size: 1.5rem; }
+        .profile-role { text-align: center; color: var(--gray-color); font-size: 0.85rem; margin-bottom: 20px; }
         .form-section {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
+            background: white; border-radius: var(--border-radius); padding: 20px;
+            margin-bottom: 20px; box-shadow: var(--shadow);
         }
-
         .section-title {
-            font-size: 1.1rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 1.1rem; color: var(--primary-color); margin-bottom: 15px;
+            padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;
+            display: flex; align-items: center; gap: 10px;
         }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--dark-color);
-        }
-
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9rem; }
         .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.95rem;
-            transition: var(--transition);
+            width: 100%; padding: 12px 15px; border: 2px solid #e9ecef;
+            border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 0.95rem;
         }
-
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); }
+        textarea { resize: vertical; min-height: 80px; }
         .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.9rem;
+            padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease;
         }
-
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #0d3d8c;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: var(--success-color);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #218838;
-        }
-
-        .btn-danger {
-            background: var(--danger-color);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
-        }
-
-        .btn-secondary {
-            background: var(--gray-color);
-            color: white;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        /* Alert */
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-primary:hover { background: #0d3d8c; transform: translateY(-2px); }
+        .btn-success { background: var(--success-color); color: white; }
+        .btn-secondary { background: var(--gray-color); color: white; }
+        .form-actions { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         .alert {
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: none;
-            animation: fadeIn 0.3s ease;
+            padding: 12px; border-radius: 10px; margin-bottom: 20px; display: none;
         }
-
-        .alert.show {
-            display: block;
+        .alert.show { display: block; animation: fadeIn 0.3s ease; }
+        .alert-success { background: #d4edda; color: var(--success-color); border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: var(--danger-color); border: 1px solid #f5c6cb; }
+        .upload-progress {
+            background: #e9ecef; border-radius: 10px; height: 6px; margin-top: 10px; display: none;
         }
-
-        .alert-success {
-            background: #d4edda;
-            color: var(--success-color);
-            border: 1px solid #c3e6cb;
+        .upload-progress.show { display: block; }
+        .upload-progress-bar {
+            background: var(--primary-color); width: 0%; height: 100%; border-radius: 10px;
+            transition: width 0.3s;
         }
-
-        .alert-error {
-            background: #f8d7da;
-            color: var(--danger-color);
-            border: 1px solid #f5c6cb;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Image Upload Options */
-        .upload-options {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .upload-option {
-            flex: 1;
-            padding: 10px;
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .upload-option:hover {
-            border-color: var(--primary-color);
-            background: rgba(26, 95, 180, 0.05);
-        }
-
-        .upload-option i {
-            font-size: 1.2rem;
-            color: var(--primary-color);
-            margin-right: 8px;
-        }
-
-        .url-input {
-            margin-top: 10px;
-            display: none;
-        }
-
-        .url-input.show {
-            display: block;
-        }
-
-        .preview-img {
-            max-width: 100px;
-            max-height: 100px;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        /* Loading */
         .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; justify-content: center;
+            align-items: center; z-index: 1000;
         }
-
-        .loading.show {
-            display: flex;
+        .loading.show { display: flex; }
+        .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .toast {
+            position: fixed; bottom: 20px; right: 20px; background: var(--success-color);
+            color: white; padding: 10px 20px; border-radius: 8px; display: none; z-index: 1100;
         }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .toast.show { display: block; }
     </style>
 </head>
 <body>
@@ -374,86 +132,39 @@
             <div class="profile-cover"></div>
             <div class="profile-avatar-wrapper">
                 <img id="profileAvatar" class="profile-avatar" src="https://ui-avatars.com/api/?background=1a5fb4&color=fff&name=User" alt="Avatar">
-                <div class="change-photo-btn" id="changePhotoBtn">
-                    <i class="fas fa-camera"></i>
-                </div>
+                <div class="change-photo-btn" id="changePhotoBtn"><i class="fas fa-camera"></i></div>
             </div>
-            <div class="profile-name">
-                <h2 id="displayName">Memuat...</h2>
-            </div>
-            <div class="profile-role">
-                <span id="userRole">Siswa X TKRO 5</span> • <span id="userEmail">-</span>
-            </div>
+            <div class="profile-name"><h2 id="displayName">Memuat...</h2></div>
+            <div class="profile-role"><span id="userRole">Siswa X TKRO 5</span> • <span id="userEmail">-</span></div>
         </div>
 
         <div id="alertBox" class="alert"></div>
 
-        <!-- Edit Informasi Dasar -->
         <div class="form-section">
-            <div class="section-title">
-                <i class="fas fa-user-edit"></i>
-                <span>Informasi Dasar</span>
-            </div>
-            <div class="form-group">
-                <label>Nama Tampilan</label>
-                <input type="text" id="editDisplayName" placeholder="Nama yang akan ditampilkan">
-            </div>
-            <div class="form-group">
-                <label>Bio / Status</label>
-                <textarea id="editBio" placeholder="Tulis bio singkat tentang dirimu..."></textarea>
-            </div>
-            <div class="form-actions">
-                <button class="btn btn-primary" id="saveProfileBtn">
-                    <i class="fas fa-save"></i> Simpan Perubahan
-                </button>
-            </div>
+            <div class="section-title"><i class="fas fa-user-edit"></i><span>Informasi Dasar</span></div>
+            <div class="form-group"><label>Nama Tampilan</label><input type="text" id="editDisplayName" placeholder="Nama yang akan ditampilkan"></div>
+            <div class="form-group"><label>Bio / Status</label><textarea id="editBio" placeholder="Tulis bio singkat..."></textarea></div>
+            <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar" id="uploadProgressBar"></div></div>
+            <div class="form-actions"><button class="btn btn-primary" id="saveProfileBtn"><i class="fas fa-save"></i> Simpan Perubahan</button></div>
         </div>
 
-        <!-- Ganti Password -->
         <div class="form-section">
-            <div class="section-title">
-                <i class="fas fa-key"></i>
-                <span>Ganti Password</span>
-            </div>
-            <div class="form-group">
-                <label>Password Lama</label>
-                <input type="password" id="oldPassword" placeholder="Masukkan password lama">
-            </div>
-            <div class="form-group">
-                <label>Password Baru</label>
-                <input type="password" id="newPassword" placeholder="Minimal 6 karakter">
-            </div>
-            <div class="form-group">
-                <label>Konfirmasi Password Baru</label>
-                <input type="password" id="confirmNewPassword" placeholder="Ulangi password baru">
-            </div>
-            <div class="form-actions">
-                <button class="btn btn-success" id="changePasswordBtn">
-                    <i class="fas fa-lock"></i> Ganti Password
-                </button>
-            </div>
+            <div class="section-title"><i class="fas fa-key"></i><span>Ganti Password</span></div>
+            <div class="form-group"><label>Password Lama</label><input type="password" id="oldPassword" placeholder="Masukkan password lama"></div>
+            <div class="form-group"><label>Password Baru</label><input type="password" id="newPassword" placeholder="Minimal 6 karakter"></div>
+            <div class="form-group"><label>Konfirmasi Password Baru</label><input type="password" id="confirmNewPassword" placeholder="Ulangi password baru"></div>
+            <div class="form-actions"><button class="btn btn-success" id="changePasswordBtn"><i class="fas fa-lock"></i> Ganti Password</button></div>
         </div>
 
-        <!-- Logout -->
         <div class="form-section">
-            <div class="section-title">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Aksi Lainnya</span>
-            </div>
-            <div class="form-actions">
-                <button class="btn btn-secondary" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
+            <div class="section-title"><i class="fas fa-sign-out-alt"></i><span>Aksi Lainnya</span></div>
+            <div class="form-actions"><button class="btn btn-secondary" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div class="loading" id="loadingOverlay">
-        <div class="spinner"></div>
-    </div>
+    <div class="loading" id="loadingOverlay"><div class="spinner"></div></div>
+    <div class="toast" id="toast"></div>
 
-    <!-- Hidden File Input -->
     <input type="file" id="fileInput" accept="image/*" style="display: none;">
     <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
 
@@ -472,63 +183,67 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
+        const rtdb = firebase.database();
 
         let currentUser = null;
         let currentUserData = null;
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.background = isError ? '#dc3545' : '#28a745';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
 
         function showAlert(message, type) {
             const alertBox = document.getElementById('alertBox');
             alertBox.textContent = message;
             alertBox.className = `alert alert-${type} show`;
-            setTimeout(() => {
-                alertBox.classList.remove('show');
-            }, 4000);
+            setTimeout(() => alertBox.classList.remove('show'), 4000);
         }
 
         function showLoading(show) {
             const loader = document.getElementById('loadingOverlay');
-            if (show) {
-                loader.classList.add('show');
-            } else {
-                loader.classList.remove('show');
-            }
+            if (show) loader.classList.add('show');
+            else loader.classList.remove('show');
         }
 
-        async function uploadImageToStorage(file, userId) {
+        async function uploadImageToStorage(file, userId, onProgress) {
             const fileName = `profile_${userId}_${Date.now()}.jpg`;
             const storageRef = storage.ref().child(`profile_pics/${fileName}`);
-            const uploadTask = await storageRef.put(file);
-            const downloadURL = await uploadTask.ref.getDownloadURL();
-            return downloadURL;
+            
+            return new Promise((resolve, reject) => {
+                const uploadTask = storageRef.put(file);
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        if (onProgress) onProgress(progress);
+                    },
+                    (error) => reject(error),
+                    async () => {
+                        const url = await uploadTask.snapshot.ref.getDownloadURL();
+                        resolve(url);
+                    }
+                );
+            });
         }
 
         async function loadUserProfile() {
             currentUser = auth.currentUser;
-            if (!currentUser) {
-                window.location.href = 'login.html';
-                return;
-            }
-
+            if (!currentUser) { window.location.href = 'login.html'; return; }
             const userDoc = await db.collection('users').doc(currentUser.uid).get();
-            if (!userDoc.exists) {
-                window.location.href = 'login.html';
-                return;
-            }
-
+            if (!userDoc.exists) { window.location.href = 'login.html'; return; }
             currentUserData = userDoc.data();
-            
-            // Update UI
             const displayName = currentUserData.displayName || currentUserData.fullName || 'User';
             document.getElementById('displayName').textContent = displayName;
             document.getElementById('userEmail').textContent = currentUser.email;
             document.getElementById('userRole').textContent = currentUserData.isAdmin ? 'Administrator' : 'Siswa X TKRO 5';
-            
-            // Profile picture
-            if (currentUserData.profilePic) {
+            if (currentUserData.profilePic && currentUserData.profilePic !== '') {
                 document.getElementById('profileAvatar').src = currentUserData.profilePic;
+            } else {
+                document.getElementById('profileAvatar').src = `https://ui-avatars.com/api/?background=1a5fb4&color=fff&name=${encodeURIComponent(displayName[0])}`;
             }
-            
-            // Form values
             document.getElementById('editDisplayName').value = displayName;
             document.getElementById('editBio').value = currentUserData.bio || '';
         }
@@ -536,198 +251,127 @@
         async function updateProfile(displayName, bio, profilePicUrl = null) {
             showLoading(true);
             try {
-                const updates = {
-                    displayName: displayName,
-                    bio: bio,
-                    updatedAt: Date.now()
-                };
-                
-                if (profilePicUrl) {
-                    updates.profilePic = profilePicUrl;
-                }
-                
+                const updates = { displayName: displayName, bio: bio, updatedAt: Date.now() };
+                if (profilePicUrl) updates.profilePic = profilePicUrl;
                 await db.collection('users').doc(currentUser.uid).update(updates);
-                
-                // Update tampilan
                 document.getElementById('displayName').textContent = displayName;
                 if (profilePicUrl) {
                     document.getElementById('profileAvatar').src = profilePicUrl;
                 }
-                
+                showToast('Profil berhasil diperbarui!');
                 showAlert('Profil berhasil diperbarui!', 'success');
             } catch (error) {
                 console.error(error);
-                showAlert('Gagal memperbarui profil: ' + error.message, 'error');
-            } finally {
-                showLoading(false);
-            }
+                showToast('Gagal: ' + error.message, true);
+                showAlert('Gagal memperbarui profil!', 'error');
+            } finally { showLoading(false); }
         }
 
-        // Save profile
         document.getElementById('saveProfileBtn').addEventListener('click', async () => {
             const newName = document.getElementById('editDisplayName').value.trim();
             const newBio = document.getElementById('editBio').value.trim();
-            
-            if (!newName) {
-                showAlert('Nama tidak boleh kosong!', 'error');
-                return;
-            }
-            
+            if (!newName) { showAlert('Nama tidak boleh kosong!', 'error'); return; }
             await updateProfile(newName, newBio);
         });
 
-        // Change password
         document.getElementById('changePasswordBtn').addEventListener('click', async () => {
             const oldPassword = document.getElementById('oldPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmNewPassword').value;
-            
-            if (!oldPassword || !newPassword) {
-                showAlert('Isi semua field password!', 'error');
-                return;
-            }
-            
-            if (newPassword !== confirmPassword) {
-                showAlert('Password baru tidak cocok!', 'error');
-                return;
-            }
-            
-            if (newPassword.length < 6) {
-                showAlert('Password minimal 6 karakter!', 'error');
-                return;
-            }
-            
+            if (!oldPassword || !newPassword) { showAlert('Isi semua field password!', 'error'); return; }
+            if (newPassword !== confirmPassword) { showAlert('Password baru tidak cocok!', 'error'); return; }
+            if (newPassword.length < 6) { showAlert('Password minimal 6 karakter!', 'error'); return; }
             showLoading(true);
             try {
-                // Re-authenticate
                 const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, oldPassword);
                 await currentUser.reauthenticateWithCredential(credential);
-                
-                // Update password
                 await currentUser.updatePassword(newPassword);
-                
+                showToast('Password berhasil diubah!');
                 showAlert('Password berhasil diubah!', 'success');
                 document.getElementById('oldPassword').value = '';
                 document.getElementById('newPassword').value = '';
                 document.getElementById('confirmNewPassword').value = '';
             } catch (error) {
-                console.error(error);
-                if (error.code === 'auth/wrong-password') {
-                    showAlert('Password lama salah!', 'error');
-                } else {
-                    showAlert('Gagal mengubah password: ' + error.message, 'error');
-                }
-            } finally {
-                showLoading(false);
-            }
+                let msg = error.code === 'auth/wrong-password' ? 'Password lama salah!' : 'Gagal mengubah password';
+                showToast(msg, true);
+                showAlert(msg, 'error');
+            } finally { showLoading(false); }
         });
 
-        // Logout
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             if (confirm('Yakin ingin logout?')) {
                 showLoading(true);
                 try {
-                    // Hapus session
                     const deviceId = localStorage.getItem('deviceId');
-                    await firebase.database().ref(`sessions/${currentUser.uid}`).remove();
-                    await db.collection('users').doc(currentUser.uid).update({
-                        isOnline: false,
-                        lastActive: Date.now()
-                    });
+                    await rtdb.ref(`sessions/${currentUser.uid}`).remove();
+                    await db.collection('users').doc(currentUser.uid).update({ isOnline: false });
                     await auth.signOut();
                     localStorage.removeItem('deviceId');
                     window.location.href = 'login.html';
-                } catch (error) {
-                    console.error(error);
-                    showAlert('Gagal logout', 'error');
-                } finally {
-                    showLoading(false);
-                }
+                } catch (error) { showToast('Gagal logout', true); showLoading(false); }
             }
         });
 
-        // Upload photo options
-        const changePhotoBtn = document.getElementById('changePhotoBtn');
+        // Upload foto via galeri/kamera
         const fileInput = document.getElementById('fileInput');
         const cameraInput = document.getElementById('cameraInput');
+        const progressDiv = document.getElementById('uploadProgress');
+        const progressBar = document.getElementById('uploadProgressBar');
 
-        function showPhotoOptions() {
-            // Buat modal sederhana
-            const options = ['Ambil dari Galeri', 'Ambil Foto (Kamera)', 'Masukkan URL Gambar', 'Batal'];
-            
-            if (window.confirm) {
-                const choice = prompt(
-                    'Pilih metode ganti foto profil:\n' +
-                    '1 - Ambil dari Galeri\n' +
-                    '2 - Ambil Foto (Kamera)\n' +
-                    '3 - Masukkan URL Gambar\n' +
-                    '0 - Batal'
-                );
-                
-                if (choice === '1') {
-                    fileInput.click();
-                } else if (choice === '2') {
-                    cameraInput.click();
-                } else if (choice === '3') {
-                    const url = prompt('Masukkan URL gambar (https://...):');
-                    if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
-                        updateProfile(
-                            document.getElementById('editDisplayName').value,
-                            document.getElementById('editBio').value,
-                            url
-                        );
-                    } else {
-                        showAlert('URL tidak valid!', 'error');
-                    }
-                }
+        function showProgress(percent) {
+            progressDiv.classList.add('show');
+            progressBar.style.width = percent + '%';
+            if (percent >= 100) {
+                setTimeout(() => {
+                    progressDiv.classList.remove('show');
+                    progressBar.style.width = '0%';
+                }, 1000);
             }
         }
 
-        changePhotoBtn.addEventListener('click', showPhotoOptions);
+        function showPhotoOptions() {
+            const choice = prompt('Pilih metode:\n1 - Galeri\n2 - Kamera\n3 - URL Gambar');
+            if (choice === '1') fileInput.click();
+            else if (choice === '2') cameraInput.click();
+            else if (choice === '3') {
+                const url = prompt('Masukkan URL gambar:');
+                if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+                    updateProfile(document.getElementById('editDisplayName').value, document.getElementById('editBio').value, url);
+                } else { showAlert('URL tidak valid!', 'error'); }
+            }
+        }
+
+        document.getElementById('changePhotoBtn').addEventListener('click', showPhotoOptions);
 
         async function handleFileUpload(file) {
-            if (!file.type.startsWith('image/')) {
-                showAlert('Pilih file gambar!', 'error');
-                return;
-            }
+            if (!file.type.startsWith('image/')) { showAlert('Pilih file gambar!', 'error'); return; }
+            if (file.size > 5 * 1024 * 1024) { showAlert('Ukuran maksimal 5MB!', 'error'); return; }
             
             showLoading(true);
             try {
-                const imageUrl = await uploadImageToStorage(file, currentUser.uid);
-                await updateProfile(
-                    document.getElementById('editDisplayName').value,
-                    document.getElementById('editBio').value,
-                    imageUrl
-                );
-            } catch (error) {
+                const imageUrl = await uploadImageToStorage(file, currentUser.uid, showProgress);
+                await updateProfile(document.getElementById('editDisplayName').value, document.getElementById('editBio').value, imageUrl);
+            } catch (error) { 
                 console.error(error);
-                showAlert('Gagal upload foto: ' + error.message, 'error');
-            } finally {
-                showLoading(false);
-            }
+                showToast('Gagal upload: ' + error.message, true); 
+                showAlert('Gagal upload foto!', 'error');
+            } finally { showLoading(false); }
         }
 
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFileUpload(e.target.files[0]);
-            }
-            fileInput.value = '';
-        });
-        
-        cameraInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFileUpload(e.target.files[0]);
-            }
-            cameraInput.value = '';
-        });
+        fileInput.addEventListener('change', (e) => { if (e.target.files.length) handleFileUpload(e.target.files[0]); fileInput.value = ''; });
+        cameraInput.addEventListener('change', (e) => { if (e.target.files.length) handleFileUpload(e.target.files[0]); cameraInput.value = ''; });
 
-        // Cek autentikasi
         auth.onAuthStateChanged(async (user) => {
             if (user) {
+                const deviceId = localStorage.getItem('deviceId');
+                const session = await rtdb.ref(`sessions/${user.uid}`).once('value');
+                if (!session.exists() || session.val().deviceId !== deviceId) {
+                    await auth.signOut();
+                    window.location.href = 'login.html';
+                    return;
+                }
                 await loadUserProfile();
-            } else {
-                window.location.href = 'login.html';
-            }
+            } else { window.location.href = 'login.html'; }
         });
     </script>
 </body>

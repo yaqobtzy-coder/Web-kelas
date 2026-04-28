@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="https://files.catbox.moe/xcsjiz.png" type="image/png">
+    <link rel="manifest" href="manifest.json">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -52,9 +53,7 @@
             align-items: center;
             gap: 12px;
             box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            flex-shrink: 0;
         }
 
         .back-btn {
@@ -71,16 +70,13 @@
             justify-content: center;
         }
 
-        .back-btn:hover {
-            background: rgba(26, 95, 180, 0.1);
-        }
-
         .chat-info {
             flex: 1;
+            cursor: pointer;
         }
 
         .chat-info h3 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 2px;
         }
 
@@ -98,6 +94,17 @@
             margin-right: 5px;
         }
 
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
         /* Messages Container */
         .messages-container {
             flex: 1;
@@ -106,6 +113,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            padding-bottom: 20px;
         }
 
         /* Message Bubbles */
@@ -156,6 +164,11 @@
             word-wrap: break-word;
         }
 
+        .message-text a {
+            color: inherit;
+            text-decoration: underline;
+        }
+
         .message-image {
             max-width: 200px;
             max-height: 200px;
@@ -164,11 +177,18 @@
             margin-top: 5px;
         }
 
+        .message-video {
+            max-width: 250px;
+            border-radius: 12px;
+            margin-top: 5px;
+        }
+
         .message-voice {
             display: flex;
             align-items: center;
             gap: 10px;
             cursor: pointer;
+            min-width: 150px;
         }
 
         .voice-play-btn {
@@ -237,6 +257,7 @@
             align-items: center;
             gap: 12px;
             border-top: 1px solid #eee;
+            flex-shrink: 0;
         }
 
         .attach-btn {
@@ -251,10 +272,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .attach-btn:hover {
-            background: rgba(0,0,0,0.05);
         }
 
         .voice-btn {
@@ -305,11 +322,6 @@
             justify-content: center;
         }
 
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         /* Attachment Menu */
         .attach-menu {
             position: fixed;
@@ -342,37 +354,85 @@
             background: rgba(26, 95, 180, 0.1);
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Menu Modal (Popup grup) */
+        .menu-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        .menu-modal.show {
+            display: flex;
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .menu-modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 350px;
+            overflow: hidden;
+            animation: slideUp 0.2s ease;
         }
 
-        @keyframes wave {
-            0%, 100% { height: 10px; }
-            50% { height: 25px; }
+        .menu-modal-header {
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+
+        .menu-modal-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .menu-modal-item:hover {
+            background: rgba(26, 95, 180, 0.1);
+        }
+
+        .menu-modal-item i {
+            width: 25px;
+            color: var(--primary-color);
+        }
+
+        .user-list-modal {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-list-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .link-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 10px;
         }
 
         /* Toast */
@@ -395,7 +455,7 @@
             animation: fadeInUp 0.2s ease;
         }
 
-        /* Image Preview Modal */
+        /* Image Modal */
         .image-modal {
             position: fixed;
             top: 0;
@@ -430,6 +490,27 @@
             cursor: pointer;
         }
 
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes wave {
+            0%, 100% { height: 10px; }
+            50% { height: 25px; }
+        }
+
         /* Scrollbar */
         .messages-container::-webkit-scrollbar {
             width: 5px;
@@ -450,11 +531,13 @@
         <button class="back-btn" onclick="window.location.href='web-kelas.html'">
             <i class="fas fa-arrow-left"></i>
         </button>
-        <div class="chat-info">
+        <div class="chat-info" id="groupInfoBtn">
             <h3><span class="online-status"></span> Chat Kelas X TKRO 5</h3>
-            <p>Semua siswa bisa melihat pesan</p>
+            <p id="groupSubtitle">Semua siswa bisa melihat pesan</p>
         </div>
-        <div></div>
+        <button class="menu-btn" id="menuBtn">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
     </div>
 
     <div class="messages-container" id="messagesContainer">
@@ -485,6 +568,69 @@
         <div class="attach-item" id="cameraBtn">
             <i class="fas fa-camera" style="color: var(--secondary-color);"></i>
             <span>Ambil Foto</span>
+        </div>
+        <div class="attach-item" id="videoLinkBtn">
+            <i class="fab fa-youtube" style="color: #ff0000;"></i>
+            <span>Link Video</span>
+        </div>
+    </div>
+
+    <!-- Menu Modal Grup -->
+    <div class="menu-modal" id="groupMenuModal">
+        <div class="menu-modal-content">
+            <div class="menu-modal-header">
+                <h3><i class="fas fa-users"></i> Info Grup</h3>
+            </div>
+            <div class="menu-modal-item" id="toggleNotifBtn">
+                <i class="fas fa-bell"></i>
+                <span id="notifText">Aktifkan Notifikasi</span>
+            </div>
+            <div class="menu-modal-item" id="listUserBtn">
+                <i class="fas fa-list"></i>
+                <span>Daftar Anggota</span>
+            </div>
+            <div class="menu-modal-item" id="groupLinkBtn">
+                <i class="fas fa-link"></i>
+                <span>Link Grup</span>
+            </div>
+            <div class="menu-modal-item" onclick="closeMenuModal()">
+                <i class="fas fa-times"></i>
+                <span>Tutup</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daftar User Modal -->
+    <div class="menu-modal" id="userListModal">
+        <div class="menu-modal-content">
+            <div class="menu-modal-header">
+                <h3><i class="fas fa-users"></i> Anggota Kelas</h3>
+            </div>
+            <div class="user-list-modal" id="userListContent">
+                <div style="padding: 20px; text-align: center;">Memuat...</div>
+            </div>
+            <div class="menu-modal-item" onclick="closeUserListModal()">
+                <i class="fas fa-times"></i>
+                <span>Tutup</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Grup Modal -->
+    <div class="menu-modal" id="groupLinkModal">
+        <div class="menu-modal-content">
+            <div class="menu-modal-header">
+                <h3><i class="fas fa-link"></i> Link Grup</h3>
+            </div>
+            <div style="padding: 20px;">
+                <p style="margin-bottom: 10px; font-size: 0.85rem;">Klik link untuk bergabung ke grup WhatsApp/Telegram</p>
+                <input type="text" id="groupLinkInput" class="link-input" placeholder="https://chat.whatsapp.com/...">
+                <button id="saveGroupLinkBtn" style="margin-top: 15px; width: 100%; padding: 10px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer;">Simpan</button>
+            </div>
+            <div class="menu-modal-item" onclick="closeGroupLinkModal()">
+                <i class="fas fa-times"></i>
+                <span>Tutup</span>
+            </div>
         </div>
     </div>
 
@@ -524,9 +670,20 @@
         let audioChunks = [];
         let isRecording = false;
         let messageListener = null;
+        let notificationPermission = false;
+        let audio = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3');
 
         const ROOM_ID = 'classroom_x_tkro_5';
         const messagesRef = rtdb.ref(`chatRooms/${ROOM_ID}/messages`);
+        const groupSettingsRef = rtdb.ref(`chatRooms/${ROOM_ID}/settings`);
+
+        // Request notification permission
+        if ('Notification' in window) {
+            if (Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+            notificationPermission = Notification.permission === 'granted';
+        }
 
         function showToast(message) {
             const toast = document.getElementById('toast');
@@ -535,19 +692,51 @@
             setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
+        function sendNotification(title, body, icon) {
+            if (notificationPermission && document.hidden) {
+                new Notification(title, { body: body, icon: icon });
+                audio.play();
+            }
+        }
+
         function formatTime(timestamp) {
             const date = new Date(timestamp);
             return `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
         }
 
-        async function uploadToStorage(file, path) {
+        async function uploadToStorage(file, path, onProgress) {
             const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
             const storageRef = storage.ref().child(`${path}/${fileName}`);
-            await storageRef.put(file);
-            return await storageRef.getDownloadURL();
+            
+            return new Promise((resolve, reject) => {
+                const uploadTask = storageRef.put(file);
+                if (onProgress) {
+                    uploadTask.on('state_changed', (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        onProgress(progress);
+                    });
+                }
+                uploadTask.then(async (snapshot) => {
+                    const url = await snapshot.ref.getDownloadURL();
+                    resolve(url);
+                }).catch(reject);
+            });
         }
 
-        async function sendMessage(type, content, thumbnail = null) {
+        function extractVideoId(url) {
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
+                /(?:youtube\.com\/shorts\/)([^&\n?#]+)/,
+                /(?:youtube\.com\/embed\/)([^&\n?#]+)/
+            ];
+            for (let pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
+        async function sendMessage(type, content) {
             if (!currentUser || !currentUserData) return;
 
             const message = {
@@ -561,13 +750,20 @@
             };
 
             if (type === 'text') {
-                message.text = content;
+                // Cek apakah teks mengandung link video
+                const videoId = extractVideoId(content);
+                if (videoId) {
+                    message.type = 'video';
+                    message.videoId = videoId;
+                    message.text = content;
+                } else {
+                    message.text = content;
+                }
             } else if (type === 'image') {
                 message.imageUrl = content;
-                if (thumbnail) message.thumbnail = thumbnail;
             } else if (type === 'voice') {
-                message.voiceUrl = content;
-                message.duration = content.duration || 0;
+                message.voiceUrl = content.url;
+                message.duration = content.duration;
             }
 
             await messagesRef.push().set(message);
@@ -607,6 +803,11 @@
                 contentHtml = `<span class="message-text">${escapeHtml(message.text)}</span>`;
             } else if (message.type === 'image') {
                 contentHtml = `<img src="${message.imageUrl}" class="message-image" onclick="viewImage('${message.imageUrl}')">`;
+            } else if (message.type === 'video') {
+                contentHtml = `
+                    <iframe width="250" height="140" src="https://www.youtube.com/embed/${message.videoId}" frameborder="0" allowfullscreen class="message-video"></iframe>
+                    ${message.text ? `<div style="margin-top: 5px; font-size: 0.8rem;">${escapeHtml(message.text)}</div>` : ''}
+                `;
             } else if (message.type === 'voice') {
                 contentHtml = `
                     <div class="message-voice" onclick="playVoice(this, '${message.voiceUrl}')">
@@ -614,8 +815,7 @@
                             <i class="fas fa-play"></i>
                         </div>
                         <div class="voice-wave">
-                            <span style="height:15px"></span><span style="height:25px"></span><span style="height:10px"></span>
-                            <span style="height:20px"></span><span style="height:12px"></span><span style="height:18px"></span>
+                            <span></span><span></span><span></span><span></span><span></span>
                         </div>
                         <span class="voice-duration">${message.duration || '0:00'}</span>
                     </div>
@@ -628,9 +828,7 @@
                     ${!isOwn ? `<span class="message-sender">${escapeHtml(message.senderName)}</span>` : ''}
                     ${contentHtml}
                     <span class="message-time">${formatTime(message.timestamp)}</span>
-                    <div class="message-delete" onclick="deleteMessage('${messageId}')">
-                        <i class="fas fa-trash"></i>
-                    </div>
+                    ${isOwn ? `<div class="message-delete" onclick="deleteMessage('${messageId}')"><i class="fas fa-trash"></i></div>` : ''}
                 </div>
             `;
             
@@ -645,8 +843,7 @@
 
         window.viewImage = function(url) {
             const modal = document.getElementById('imageModal');
-            const img = document.getElementById('modalImage');
-            img.src = url;
+            document.getElementById('modalImage').src = url;
             modal.classList.add('show');
         };
 
@@ -655,17 +852,16 @@
         window.playVoice = function(element, url) {
             const audio = element.querySelector('audio');
             const playBtn = element.querySelector('.voice-play-btn i');
-            
             if (!audio) {
                 const newAudio = new Audio(url);
                 element.querySelector('.voice-wave').after(newAudio);
                 newAudio.play();
                 playBtn.className = 'fas fa-pause';
-                newAudio.onended = () => { playBtn.className = 'fas fa-play'; };
+                newAudio.onended = () => playBtn.className = 'fas fa-play';
             } else if (audio.paused) {
                 audio.play();
                 playBtn.className = 'fas fa-pause';
-                audio.onended = () => { playBtn.className = 'fas fa-play'; };
+                audio.onended = () => playBtn.className = 'fas fa-play';
             } else {
                 audio.pause();
                 playBtn.className = 'fas fa-play';
@@ -676,12 +872,12 @@
             if (messageListener) messageListener.off();
             
             messageListener = messagesRef.orderByChild('timestamp').limitToLast(50);
+            let lastSenderId = null;
             messageListener.on('child_added', (snapshot) => {
                 const message = snapshot.val();
                 const messageId = snapshot.key;
                 const container = document.getElementById('messagesContainer');
                 
-                // Hapus loading indicator jika ada
                 if (container.children.length === 1 && container.children[0].innerHTML.includes('Memuat')) {
                     container.innerHTML = '';
                 }
@@ -689,7 +885,50 @@
                 const msgElement = createMessageElement(message, messageId);
                 container.appendChild(msgElement);
                 container.scrollTop = container.scrollHeight;
+                
+                // Notifikasi jika pesan dari orang lain dan aplikasi tidak aktif
+                if (message.senderId !== currentUser?.uid && document.hidden) {
+                    sendNotification(
+                        message.senderName,
+                        message.type === 'text' ? message.text : (message.type === 'image' ? 'Mengirim gambar' : 'Mengirim voice note'),
+                        message.senderPhoto
+                    );
+                }
             });
+        }
+
+        // Load group settings
+        async function loadGroupSettings() {
+            const snapshot = await groupSettingsRef.once('value');
+            const settings = snapshot.val();
+            if (settings && settings.link) {
+                document.getElementById('groupLinkInput').value = settings.link;
+            }
+        }
+
+        // Load user list for modal
+        async function loadUserList() {
+            const snapshot = await db.collection('users').get();
+            const users = [];
+            snapshot.forEach(doc => {
+                if (doc.id !== currentUser?.uid) {
+                    users.push({ id: doc.id, ...doc.data() });
+                }
+            });
+            const container = document.getElementById('userListContent');
+            if (users.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center;">Belum ada user lain</div>';
+                return;
+            }
+            container.innerHTML = users.map(user => `
+                <div class="user-list-item">
+                    <img class="user-list-avatar" src="${user.profilePic || `https://ui-avatars.com/api/?background=1a5fb4&color=fff&name=${encodeURIComponent(user.displayName || user.fullName)}`}">
+                    <div>
+                        <strong>${escapeHtml(user.displayName || user.fullName)}</strong>
+                        <p style="font-size: 0.7rem; color: var(--gray-color);"><span class="online-status ${user.isOnline ? 'online' : 'offline'}" style="background: ${user.isOnline ? '#28a745' : '#6c757d'}"></span> ${user.isOnline ? 'Online' : 'Offline'}</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // Voice Recording
@@ -705,6 +944,7 @@
                 
                 mediaRecorder.onstop = async () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    showToast('Mengupload voice note...');
                     const url = await uploadToStorage(audioBlob, 'voice_messages');
                     const duration = Math.round(audioChunks.reduce((acc, chunk) => acc + chunk.size, 0) / 16000);
                     await sendMessage('voice', { url, duration: `${Math.floor(duration/60)}:${(duration%60).toString().padStart(2,'0')}` });
@@ -740,6 +980,10 @@
                 showToast('Pilih file gambar');
                 return;
             }
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Ukuran maksimal 5MB');
+                return;
+            }
             
             showToast('Mengupload gambar...');
             try {
@@ -751,6 +995,52 @@
                 showToast('Gagal upload gambar');
             }
         }
+
+        // Modal functions
+        function openMenuModal() {
+            document.getElementById('groupMenuModal').classList.add('show');
+        }
+
+        function closeMenuModal() {
+            document.getElementById('groupMenuModal').classList.remove('show');
+        }
+
+        function openUserListModal() {
+            closeMenuModal();
+            loadUserList();
+            document.getElementById('userListModal').classList.add('show');
+        }
+
+        function closeUserListModal() {
+            document.getElementById('userListModal').classList.remove('show');
+        }
+
+        function openGroupLinkModal() {
+            closeMenuModal();
+            loadGroupSettings();
+            document.getElementById('groupLinkModal').classList.add('show');
+        }
+
+        function closeGroupLinkModal() {
+            document.getElementById('groupLinkModal').classList.remove('show');
+        }
+
+        // Notification toggle
+        let notifEnabled = localStorage.getItem('chatNotif') !== 'false';
+        function toggleNotification() {
+            notifEnabled = !notifEnabled;
+            localStorage.setItem('chatNotif', notifEnabled);
+            document.getElementById('notifText').textContent = notifEnabled ? 'Nonaktifkan Notifikasi' : 'Aktifkan Notifikasi';
+            showToast(notifEnabled ? 'Notifikasi diaktifkan' : 'Notifikasi dinonaktifkan');
+        }
+
+        // Save group link
+        document.getElementById('saveGroupLinkBtn').addEventListener('click', async () => {
+            const link = document.getElementById('groupLinkInput').value.trim();
+            await groupSettingsRef.update({ link: link });
+            showToast('Link grup disimpan');
+            closeGroupLinkModal();
+        });
 
         // Event Listeners
         document.getElementById('sendBtn').addEventListener('click', async () => {
@@ -782,7 +1072,8 @@
         const attachBtn = document.getElementById('attachBtn');
         const attachMenu = document.getElementById('attachMenu');
         
-        attachBtn.addEventListener('click', () => {
+        attachBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             attachMenu.classList.toggle('show');
         });
         
@@ -802,6 +1093,14 @@
             attachMenu.classList.remove('show');
         });
         
+        document.getElementById('videoLinkBtn').addEventListener('click', () => {
+            const url = prompt('Masukkan link YouTube:');
+            if (url && url.trim()) {
+                sendMessage('text', url.trim());
+            }
+            attachMenu.classList.remove('show');
+        });
+        
         document.getElementById('galleryInput').addEventListener('change', (e) => {
             if (e.target.files.length) handleImageUpload(e.target.files[0]);
             e.target.value = '';
@@ -811,6 +1110,13 @@
             if (e.target.files.length) handleImageUpload(e.target.files[0]);
             e.target.value = '';
         });
+        
+        // Menu buttons
+        document.getElementById('menuBtn').addEventListener('click', openMenuModal);
+        document.getElementById('groupInfoBtn').addEventListener('click', openMenuModal);
+        document.getElementById('toggleNotifBtn').addEventListener('click', toggleNotification);
+        document.getElementById('listUserBtn').addEventListener('click', openUserListModal);
+        document.getElementById('groupLinkBtn').addEventListener('click', openGroupLinkModal);
         
         // Image modal close
         document.querySelector('.image-modal-close').addEventListener('click', () => {
@@ -836,6 +1142,14 @@
                 if (userDoc.exists) {
                     currentUserData = userDoc.data();
                     loadMessages();
+                    loadGroupSettings();
+                    
+                    // Update online status
+                    await db.collection('users').doc(user.uid).update({ isOnline: true, lastActive: Date.now() });
+                    
+                    // Initialize notification setting
+                    const notifEnabled = localStorage.getItem('chatNotif') !== 'false';
+                    document.getElementById('notifText').textContent = notifEnabled ? 'Nonaktifkan Notifikasi' : 'Aktifkan Notifikasi';
                 } else {
                     window.location.href = 'login.html';
                 }
