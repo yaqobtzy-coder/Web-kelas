@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X TKRO 5 - SMKN 6 Bandung</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://files.catbox.moe/xcsjiz.png" type="image/png">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a5fb4;
+            --secondary-color: #e95420;
+            --accent-color: #f2a900;
+            --dark-color: #333333;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 10px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-container {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: pulse 1.5s infinite;
+        }
+
+        .loading-logo img {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        .loading-container h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .loading-container p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="loading-logo">
+            <img src="https://files.catbox.moe/xcsjiz.png" alt="Logo SMKN 6 Bandung">
+        </div>
+        <h2>X TKRO 5</h2>
+        <p>SMKN 6 Bandung</p>
+        <div class="loading-spinner"></div>
+        <p>Memeriksa sesi...</p>
+    </div>
+
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-jP9F82EcaCAvQ87-JAuErkd7DdbWbjA",
+            authDomain: "rayy-all-web.firebaseapp.com",
+            databaseURL: "https://rayy-all-web-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "rayy-all-web",
+            storageBucket: "rayy-all-web.firebasestorage.app",
+            messagingSenderId: "491699101144",
+            appId: "1:491699101144:web:7d9976eb6b16d66f56a6ad"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const rtdb = firebase.database();
+
+        // Cek session
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                // Cek apakah user masih aktif di device ini
+                const sessionRef = rtdb.ref(`sessions/${user.uid}`);
+                const session = await sessionRef.once('value');
+                const sessionData = session.val();
+                
+                // Dapatkan device fingerprint
+                const deviceId = localStorage.getItem('deviceId');
+                
+                if (sessionData && sessionData.deviceId === deviceId && sessionData.active === true) {
+                    // Session valid, redirect ke web kelas
+                    window.location.href = 'web-kelas.html';
+                } else {
+                    // Session tidak valid, logout dan redirect ke login
+                    await auth.signOut();
+                    localStorage.removeItem('deviceId');
+                    window.location.href = 'login.html';
+                }
+            } else {
+                // Belum login, redirect ke login
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>

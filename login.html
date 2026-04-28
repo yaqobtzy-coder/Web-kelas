@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Login - X TKRO 5</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://files.catbox.moe/xcsjiz.png" type="image/png">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a5fb4;
+            --secondary-color: #e95420;
+            --accent-color: #f2a900;
+            --dark-color: #333;
+            --gray-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary-color), #0d3d8c);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .login-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid white;
+            margin-bottom: 15px;
+        }
+
+        .login-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .login-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #0d3d8c;
+            transform: translateY(-2px);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--gray-color);
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .divider span {
+            margin: 0 10px;
+            font-size: 0.85rem;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: var(--dark-color);
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .google-btn:hover {
+            border-color: var(--primary-color);
+            background: rgba(26, 95, 180, 0.05);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .register-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: var(--danger-color);
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: var(--success-color);
+            border: 1px solid #c3e6cb;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .warning-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .warning-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .warning-btn.confirm {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <img src="https://files.catbox.moe/xcsjiz.png" alt="Logo">
+                <h2>Login X TKRO 5</h2>
+                <p>SMKN 6 Bandung</p>
+            </div>
+            <div class="login-body">
+                <div id="alertBox" class="alert"></div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="email" placeholder="contoh@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="password" placeholder="********" required>
+                    </div>
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Login dengan Email
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>atau</span>
+                </div>
+
+                <button class="google-btn" id="googleLoginBtn">
+                    <i class="fab fa-google"></i> Login dengan Google
+                </button>
+
+                <div class="register-link">
+                    <p>Belum punya akun? <a href="register.html">Daftar Sekarang</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="warningModal" class="warning-box hidden" style="position: fixed; bottom: 20px; left: 20px; right: 20px; max-width: 400px; margin: 0 auto; z-index: 1000;">
+        <p><i class="fas fa-exclamation-triangle"></i> Akun sedang aktif di device lain. Lanjutkan?</p>
+        <div class="warning-buttons">
+            <button class="warning-btn confirm" id="confirmLogoutBtn">Ya, Lanjutkan</button>
+            <button class="warning-btn cancel" id="cancelLogoutBtn">Tidak</button>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-jP9F82EcaCAvQ87-JAuErkd7DdbWbjA",
+            authDomain: "rayy-all-web.firebaseapp.com",
+            databaseURL: "https://rayy-all-web-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "rayy-all-web",
+            storageBucket: "rayy-all-web.firebasestorage.app",
+            messagingSenderId: "491699101144",
+            appId: "1:491699101144:web:7d9976eb6b16d66f56a6ad"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const rtdb = firebase.database();
+
+        let pendingUser = null;
+
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('deviceId');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId', deviceId);
+            }
+            return deviceId;
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+            setTimeout(() => alertBox.classList.remove('show'), 5000);
+        }
+
+        async function handleSession(user, forceLogout = false) {
+            const deviceId = getDeviceId();
+            const sessionRef = rtdb.ref(`sessions/${user.uid}`);
+            const session = await sessionRef.once('value');
+            
+            if (session.exists() && session.val().deviceId !== deviceId && !forceLogout) {
+                pendingUser = user;
+                document.getElementById('warningModal').classList.remove('hidden');
+                return false;
+            }
+            
+            await sessionRef.set({
+                deviceId: deviceId,
+                active: true,
+                loginTime: Date.now(),
+                userAgent: navigator.userAgent
+            });
+            
+            await db.collection('users').doc(user.uid).update({
+                isOnline: true,
+                lastActive: Date.now(),
+                currentDevice: deviceId
+            });
+            
+            return true;
+        }
+
+        async function handleEmailLogin(email, password) {
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    await auth.signOut();
+                    showAlert('Akun tidak terdaftar. Silakan registrasi.', 'error');
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login dengan Email';
+                    return false;
+                }
+                
+                const success = await handleSession(user);
+                if (success === false) return false;
+                
+                showAlert('Login berhasil!', 'success');
+                window.location.href = 'web-kelas.html';
+                return true;
+            } catch (error) {
+                let errorMessage = 'Login gagal. Periksa email dan password Anda.';
+                if (error.code === 'auth/user-not-found') errorMessage = 'Email tidak terdaftar.';
+                else if (error.code === 'auth/wrong-password') errorMessage = 'Password salah.';
+                showAlert(errorMessage, 'error');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login dengan Email';
+                return false;
+            }
+        }
+
+        async function handleGoogleLogin(forceLogout = false) {
+            const googleBtn = document.getElementById('googleLoginBtn');
+            googleBtn.disabled = true;
+            googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                const userCredential = await auth.signInWithPopup(provider);
+                const user = userCredential.user;
+                
+                // Cek apakah user sudah terdaftar di Firestore
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    await auth.signOut();
+                    showAlert('Akun Google belum terdaftar. Silakan daftar dulu di halaman Register.', 'error');
+                    googleBtn.disabled = false;
+                    googleBtn.innerHTML = '<i class="fab fa-google"></i> Login dengan Google';
+                    return false;
+                }
+                
+                const success = await handleSession(user, forceLogout);
+                if (success === false) {
+                    googleBtn.disabled = false;
+                    googleBtn.innerHTML = '<i class="fab fa-google"></i> Login dengan Google';
+                    return false;
+                }
+                
+                showAlert('Login berhasil!', 'success');
+                window.location.href = 'web-kelas.html';
+                return true;
+            } catch (error) {
+                console.error(error);
+                let errorMessage = 'Login dengan Google gagal.';
+                if (error.code === 'auth/popup-closed-by-user') errorMessage = 'Popup ditutup. Coba lagi.';
+                showAlert(errorMessage, 'error');
+                googleBtn.disabled = false;
+                googleBtn.innerHTML = '<i class="fab fa-google"></i> Login dengan Google';
+                return false;
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            await handleEmailLogin(email, password);
+        });
+
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+            await handleGoogleLogin(false);
+        });
+
+        document.getElementById('confirmLogoutBtn').addEventListener('click', async () => {
+            document.getElementById('warningModal').classList.add('hidden');
+            if (pendingUser) {
+                await handleSession(pendingUser, true);
+                showAlert('Login berhasil!', 'success');
+                window.location.href = 'web-kelas.html';
+                pendingUser = null;
+            }
+        });
+
+        document.getElementById('cancelLogoutBtn').addEventListener('click', async () => {
+            document.getElementById('warningModal').classList.add('hidden');
+            if (pendingUser) {
+                await auth.signOut();
+                pendingUser = null;
+            }
+        });
+
+        // Cek session aktif
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const deviceId = getDeviceId();
+                const sessionRef = rtdb.ref(`sessions/${user.uid}`);
+                const session = await sessionRef.once('value');
+                if (session.exists() && session.val().deviceId === deviceId && session.val().active === true) {
+                    window.location.href = 'web-kelas.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
